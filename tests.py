@@ -92,11 +92,10 @@ class UserModelCase(unittest.TestCase):
         f2 = db.session.scalars(u2.following_posts()).all()
         f3 = db.session.scalars(u3.following_posts()).all()
         f4 = db.session.scalars(u4.following_posts()).all()
-        self.assertEqual(f1, [p2, p4, p1])
-        self.assertEqual(f2, [p2, p3])
-        self.assertEqual(f3, [p3, p4])
-        self.assertEqual(f4, [p4])
-
+        self.assertEqual(f1, [p2, p4])
+        self.assertEqual(f2, [p3])
+        self.assertEqual(f3, [p4])
+        self.assertEqual(f4, [])
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

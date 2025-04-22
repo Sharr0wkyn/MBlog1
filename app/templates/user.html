@@ -15,12 +15,27 @@
                     {% if last_seen %}
                         <p class="mt-2 text-gray-500 dark:text-gray-400">Last seen on: {{ last_seen }}</p>
                     {% endif %}
+                    <p class="mt-2 text-gray-500 dark:text-gray-400">{{ user.followers_count() }} followers, {{ user.following_count() }} following</p>
+
                     {% if user == current_user %}
                     <a href="{{ url_for('edit_profile') }}" class="mt-4 inline-block text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-600">
                         Edit Profile
                     </a>
+                    {% elif not current_user.is_following(user) %}
+                    <a href="#">
+                        <form action="{{ url_for('follow', username=user.username) }}" method="post">
+                            {{ form.hidden_tag() }}
+                            {{ form.submit(value='Follow') }}
+                        </form>
+                    </a>
+                    {% else %}
+                    <a href="#">
+                        <form action="{{ url_for('unfollow', username=user.username) }}" method="post">
+                            {{ form.hidden_tag() }}
+                            {{ form.submit(value='Unfollow') }}
+                        </form>
+                    </a>
                     {% endif %}
-
                 </div>
             </div>
 

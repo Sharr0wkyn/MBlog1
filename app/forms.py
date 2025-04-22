@@ -5,7 +5,8 @@ import sqlalchemy as sa
 from app import db
 from app.models import User
 
-
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -48,3 +49,8 @@ class EditProfileForm(FlaskForm):
                 User.username == self.username.data))
             if user is not None:
                 raise ValidationError('Please use a different username.')
+
+class PostForm(FlaskForm):
+    post = TextAreaField('Say something', validators=[
+        DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('Submit')
