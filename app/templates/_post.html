@@ -1,13 +1,21 @@
-<div class="flex items-start space-x-4 mb-6">
-    <div>
-        <img src="{{ post.author.avatar(36) }}" alt="{{ post.author.username }}'s Avatar" class="w-9 h-9 rounded-full border-2 border-gray-300 dark:border-gray-600">
-    </div>
-    <div class="flex-1">
-        <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">
-            {{ post.author.username }} says:
+<div class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-xl shadow-md mb-6 transition-all duration-300 animate-fade-in">
+    <div class="flex items-start space-x-4">
+        <div>
+            <img src="{{ post.author.avatar(48) }}" alt="{{ post.author.username }}'s Avatar"
+                 class="w-12 h-12 rounded-full border-2 border-gray-300 dark:border-gray-600">
         </div>
-        <p class="mt-2 text-gray-700 dark:text-gray-300">
-            {{ post.body }}
-        </p>
+        <div class="flex-1">
+            <div class="flex items-center justify-between">
+                <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    {{ post.author.username }}
+                </div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                    <!-- Заглушка под время поста -->
+                </div>
+            </div>
+            <p class="mt-2 text-gray-700 dark:text-gray-300 text-sm sm:text-base">
+                {{ post.body }}
+            </p>
+        </div>
     </div>
 </div>

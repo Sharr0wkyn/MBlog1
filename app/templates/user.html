@@ -1,50 +1,97 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <div class="flex justify-left mt-10">
-        <div class="w-full max-w-12xl bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <div class="flex items-left mb-12">
-                <div class="mr-6">
-                    <img src="{{ user.avatar(128) }}" alt="User Avatar" class="w-32 h-32 rounded-full border-2 border-gray-300 dark:border-gray-600">
+    <div class="container mx-auto px-4 py-6 sm:px-6 lg:px-8 mt-10 sm:mt-12 lg:mt-16">
+        <div class="w-full bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-xl shadow-lg transition-all duration-300 animate-fade-in">
+            <!-- Профиль -->
+            <div class="flex flex-col sm:flex-row sm:items-start sm:space-x-8 mb-8">
+                <div class="flex-shrink-0 mb-6 sm:mb-0">
+                    <img src="{{ user.avatar(128) }}" alt="{{ user.username }}'s Avatar"
+                         class="w-32 h-32 rounded-full border-2 border-gray-300 dark:border-gray-600">
                 </div>
-                <div>
-                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">User: {{ user.username }}</h1>
+                <div class="flex-1">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                        {{ user.username }}
+                    </h1>
                     {% if user.about_me %}
-                        <p class="mt-2 text-gray-700 dark:text-gray-300">{{ user.about_me }}</p>
+                        <p class="text-gray-700 dark:text-gray-300 text-sm sm:text-base mb-3">
+                            {{ user.about_me }}
+                        </p>
                     {% endif %}
                     {% if last_seen %}
-                        <p class="mt-2 text-gray-500 dark:text-gray-400">Last seen on: {{ last_seen }}</p>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
+                            Последний визит: {{ last_seen }}
+                        </p>
                     {% endif %}
-                    <p class="mt-2 text-gray-500 dark:text-gray-400">{{ user.followers_count() }} followers, {{ user.following_count() }} following</p>
-
-                    {% if user == current_user %}
-                    <a href="{{ url_for('edit_profile') }}" class="mt-4 inline-block text-sky-600 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-600">
-                        Edit Profile
-                    </a>
-                    {% elif not current_user.is_following(user) %}
-                    <a href="#">
-                        <form action="{{ url_for('follow', username=user.username) }}" method="post">
-                            {{ form.hidden_tag() }}
-                            {{ form.submit(value='Follow') }}
-                        </form>
-                    </a>
-                    {% else %}
-                    <a href="#">
-                        <form action="{{ url_for('unfollow', username=user.username) }}" method="post">
-                            {{ form.hidden_tag() }}
-                            {{ form.submit(value='Unfollow') }}
-                        </form>
-                    </a>
-                    {% endif %}
+                    <!-- Статистика -->
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="text-center bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ user.followers_count() }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Подписчики</p>
+                        </div>
+                        <div class="text-center bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ user.following_count() }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Подписки</p>
+                        </div>
+                    </div>
+                    <!-- Действия -->
+                    <div class="flex space-x-3">
+                        {% if user == current_user %}
+                            <a href="{{ url_for('edit_profile') }}"
+                               class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800 transition-all duration-200 shadow-sm cursor-pointer">
+                                Редактировать
+                            </a>
+                        {% elif not current_user.is_following(user) %}
+                            <form action="{{ url_for('follow', username=user.username) }}" method="post">
+                                {{ form.hidden_tag() }}
+                                <button type="submit"
+                                        class="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 transition-all duration-200 shadow-sm cursor-pointer"
+                                        data-tooltip-target="tooltip-follow">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Подписаться
+                                </button>
+                                <div id="tooltip-follow" role="tooltip"
+                                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700">
+                                    Подписаться на {{ user.username }}
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('unfollow', username=user.username) }}" method="post">
+                                {{ form.hidden_tag() }}
+                                <button type="submit"
+                                        class="flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm cursor-pointer"
+                                        data-tooltip-target="tooltip-unfollow">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                    Отписаться
+                                </button>
+                                <div id="tooltip-unfollow" role="tooltip"
+                                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700">
+                                    Отписаться от {{ user.username }}
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
-            <hr class="my-6">
+            <!-- Разделитель -->
+            <hr class="my-6 border-gray-200 dark:border-gray-700">
 
+            <!-- Посты -->
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Посты</h2>
             <div class="space-y-4">
-                {% for post in posts %}
-                    {% include '_post.html' %}
-                {% endfor %}
+                {% if posts %}
+                    {% for post in posts %}
+                        {% include '_post.html' %}
+                    {% endfor %}
+                {% else %}
+                    <p class="text-gray-500 dark:text-gray-400 text-center">Пока нет постов</p>
+                {% endif %}
             </div>
         </div>
     </div>
