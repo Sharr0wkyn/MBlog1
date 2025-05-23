@@ -82,16 +82,13 @@ def register():
 def user(username):
     locale.setlocale(locale.LC_ALL, "ru_RU.UTF-8")
     user = db.first_or_404(sa.select(User).where(User.username == username))
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'},
-        {'author': user, 'body': 'Test post #3'},
-        {'author': user, 'body': 'Test post #4'},
-        {'author': user, 'body': 'Test post #5'}
-    ]
-    formatted_last_seen = user.last_seen.strftime("%d.%m.%Y, %H:%M")
+    posts = db.session.scalars(
+        sa.select(Post)
+        .where(Post.user_id == user.id)
+        .order_by(Post.timestamp.desc())
+    ).all()
     form = EmptyForm()
-    return render_template('user.html', user=user, posts=posts, last_seen=formatted_last_seen, form=form)
+    return render_template('user.html', user=user, posts=posts, form=form)
 
 
 @app.before_request

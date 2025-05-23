@@ -17,11 +17,16 @@
                             {{ user.about_me }}
                         </p>
                     {% endif %}
-                    {% if last_seen %}
+                    {% if user.last_seen %}
                         <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
-                            Последний визит: {{ last_seen }}
+                            Последний визит: <span id="last-seen">{{ moment(user.last_seen).format('DD.MM.YYYY, HH:mm') }}</span>
+                        </p>
+                    {% else %}
+                        <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
+                            Последний визит: Неизвестно
                         </p>
                     {% endif %}
+
                     <!-- Статистика -->
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div class="text-center bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">

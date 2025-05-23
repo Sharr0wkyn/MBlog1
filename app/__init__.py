@@ -7,8 +7,10 @@ import logging
 from logging.handlers import SMTPHandler
 from logging.handlers import RotatingFileHandler
 import os
+from flask_moment import Moment
 
 app = Flask(__name__)
+moment = Moment(app)
 login = LoginManager(app)
 login.login_view = 'login'
 app.config.from_object(Config)
